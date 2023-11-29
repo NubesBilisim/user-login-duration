@@ -1,0 +1,180 @@
+{
+  "_index": "uat-passo-logs-000039",
+  "_type": "_doc",
+  "_id": "zWlZhIsB9-IXxvbH6JRw",
+  "_score": 1,
+  "_ignored": [
+    "Properties.RequestHeader.keyword"
+  ],
+  "_source": {
+    "MessageTemplate": "{\n  \"refresh_token\": [\n    \"44DFE28EE5A7FB97566474FD0248E6B22C7F7333FD4B9B904BCCBEA84564841D\"\n  ],\n  \"grant_type\": [\n    \"refresh_token\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"client_id\": [\n    \"passo-mobile\"\n  ]\n}",
+    "tags": [
+      "uat-passo"
+    ],
+    "Level": "Information",
+    "Timestamp": "<timestamp>",
+    "Properties": {
+      "SourceContext": "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware",
+      "Path": "/connect/token",
+      "CorrelationId": "2c563c30-ec82-4b0d-9633-3370aff3decb",
+      "LogLevel": "Request",
+      "Method": "POST",
+      "RequestPath": "/connect/token",
+      "ClientAgent": "Apache-HttpClient/4.5.10 (Java/1.8.0_362)",
+      "Host": "test-superapp.aktifbank.com.tr",
+      "Schema": "http",
+      "MachineName": "identityserver-544977cfdb-9m4sj",
+      "Environment": "Test",
+      "UserId": "<userId>",
+      "RequestId": "0HMUP5CUDOGBQ:00000004",
+      "RequestHeader": "{\"Accept\":[\"application/json, text/plain, */*\"],\"Host\":[\"test-superapp.aktifbank.com.tr\"],\"User-Agent\":[\"Apache-HttpClient/4.5.10 (Java/1.8.0_362)\"],\"Accept-Encoding\":[\"gzip,deflate\"],\"Accept-Language\":[\"tr-TR,tr;q=0.9\"],\"Content-Type\":[\"application/x-www-form-urlencoded\"],\"Cookie\":[\"cookie=2877952172.20480.0000\"],\"Content-Length\":[\"147\"],\"X-Request-ID\":[\"52d8ea68189220ca494a91566848b371\"],\"X-Real-IP\":[\"10.244.137.0\"],\"X-Forwarded-For\":[\"10.244.137.0\"],\"X-Forwarded-Host\":[\"test-superapp.aktifbank.com.tr\"],\"X-Forwarded-Port\":[\"443\"],\"X-Forwarded-Proto\":[\"https\"],\"X-Forwarded-Scheme\":[\"https\"],\"X-Scheme\":[\"https\"],\"X-Original-Forwarded-For\":[\"172.16.138.136\"],\"authhorization\":[\"Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ0MzhDNDZGNjE0QjFFNkU3QTlCRTUxODg4RTRGNTk4MTkwN0YyNThSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6IlJEakViMkZMSG01Nm0tVVlpT1QxbUJrSDhsZyJ9.eyJuYmYiOjE2OTg2NzQyNTksImV4cCI6MTcwNzMxNDI1OSwiaXNzIjoicGFzc28tc3VwZXJhcHAiLCJhdWQiOlsiYmFza2V0LWFwaSIsImRvY3VtZW50LWFwaSIsImlkZW50aXR5LWFwaSIsIm90cC1hcGkiLCJwYXltZW50LWFwaSIsInByb2R1Y3QtYXBpIiwic2V0dGluZy1hcGkiLCJ1c2VyLWFwaSJdLCJjbGllbnRfaWQiOiJwYXNzby1tb2JpbGUiLCJzdWIiOiIzMzEzNTEyOTMyMkB0ZXN0ZWtpYmkuYml6IiwiYXV0aF90aW1lIjoxNjk4Njc0MjU5LCJpZHAiOiJsb2NhbCIsImlkIjoiMTU2OSIsImVtYWlsIjoiMzMxMzUxMjkzMjJAdGVzdGVraWJpLmJpeiIsImVtYWlsX3ZlcmlmaWVkIjoiVHJ1ZSIsInBob25lX251bWJlciI6IjkwNTU1MzMxMzUxMiIsInBob25lX251bWJlcl92ZXJpZmllZCI6IlRydWUiLCJnaXZlbl9uYW1lIjoiTVVIU8SwTiIsImZhbWlseV9uYW1lIjoiw4dBTENJIiwiYmlydGhkYXRlIjoiMTEvMDUvMjAwMyAwMDowMDowMCIsImdlbmRlciI6IkZlbWFsZSIsImhhdmVfcGFzc29saWciOiJUcnVlIiwianRpIjoiMDYyMDk3MDIzRkEwNkQwRjMwMjM4NkQzOUQ1Q0IxM0IiLCJpYXQiOjE2OTg2NzQyNTksInNjb3BlIjpbImJhc2tldC1hcGkiLCJkb2N1bWVudC1hcGkiLCJpZGVudGl0eS1hcGkiLCJvcGVuaWQiLCJvdHAtYXBpIiwicGF5bWVudC1hcGkiLCJwcm9kdWN0LWFwaSIsInByb2ZpbGUiLCJzZXR0aW5nLWFwaSIsInVzZXItYXBpIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbInB3ZCJdfQ.na4Z0ocP83fqRnGudY2vfqISBxALFHEukeYWvZLvldBYsjed_-rfgkNYm3_G4GrzQFR77C3wdI56KYlSVc_naCBOss4QgN1X56J7FekrpcuZTMsklYWNPmeEfOTntD9W-aMVrrh7p7FXH9MR9ZT9Ih7DggOGH7dBmlzCFg5njlmJUoSWIGddp7p3cfaDWtjwsQ-bh_qAGxURhb8p8tqIp66BeLcgELZ1iAZBdArzes8tcYoD6a_EQxSe0YOqrMLJvac6VfKoMnb9SUunfQ6AU9H59F84MMiZx6Rh4bllCLfGrrVY0ay6CAisk1eyQdwIAx1f7Swy4E4z0lXOk0cwnQ\"],\"x-correlation-id\":[\"2c563c30-ec82-4b0d-9633-3370aff3decb\"],\"x-environment-name\":[\"Test\"]}",
+      "Application": "IdentityServer.Api",
+      "Username": "Anonymous",
+      "ConnectionId": "0HMUP5CUDOGBQ",
+      "QueryString": ""
+    },
+    "@version": "1",
+    "@timestamp": "2023-10-31T06:09:26.527Z",
+    "RenderedMessage": "{\n  \"refresh_token\": [\n    \"44DFE28EE5A7FB97566474FD0248E6B22C7F7333FD4B9B904BCCBEA84564841D\"\n  ],\n  \"grant_type\": [\n    \"refresh_token\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"client_id\": [\n    \"passo-mobile\"\n  ]\n}"
+  },
+  "fields": {
+    "Properties.RequestId.keyword": [
+      "0HMUP5CUDOGBQ:00000004"
+    ],
+    "tags.keyword": [
+      "uat-passo"
+    ],
+    "Properties.QueryString.keyword": [
+      ""
+    ],
+    "Properties.Host.keyword": [
+      "test-superapp.aktifbank.com.tr"
+    ],
+    "Timestamp": [
+      "2023-10-31T06:09:25.102Z"
+    ],
+    "Properties.CorrelationId.keyword": [
+      "2c563c30-ec82-4b0d-9633-3370aff3decb"
+    ],
+    "Properties.QueryString": [
+      ""
+    ],
+    "Properties.Method": [
+      "POST"
+    ],
+    "Properties.RequestPath.keyword": [
+      "/connect/token"
+    ],
+    "Properties.RequestHeader": [
+      "{\"Accept\":[\"application/json, text/plain, */*\"],\"Host\":[\"test-superapp.aktifbank.com.tr\"],\"User-Agent\":[\"Apache-HttpClient/4.5.10 (Java/1.8.0_362)\"],\"Accept-Encoding\":[\"gzip,deflate\"],\"Accept-Language\":[\"tr-TR,tr;q=0.9\"],\"Content-Type\":[\"application/x-www-form-urlencoded\"],\"Cookie\":[\"cookie=2877952172.20480.0000\"],\"Content-Length\":[\"147\"],\"X-Request-ID\":[\"52d8ea68189220ca494a91566848b371\"],\"X-Real-IP\":[\"10.244.137.0\"],\"X-Forwarded-For\":[\"10.244.137.0\"],\"X-Forwarded-Host\":[\"test-superapp.aktifbank.com.tr\"],\"X-Forwarded-Port\":[\"443\"],\"X-Forwarded-Proto\":[\"https\"],\"X-Forwarded-Scheme\":[\"https\"],\"X-Scheme\":[\"https\"],\"X-Original-Forwarded-For\":[\"172.16.138.136\"],\"authhorization\":[\"Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ0MzhDNDZGNjE0QjFFNkU3QTlCRTUxODg4RTRGNTk4MTkwN0YyNThSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6IlJEakViMkZMSG01Nm0tVVlpT1QxbUJrSDhsZyJ9.eyJuYmYiOjE2OTg2NzQyNTksImV4cCI6MTcwNzMxNDI1OSwiaXNzIjoicGFzc28tc3VwZXJhcHAiLCJhdWQiOlsiYmFza2V0LWFwaSIsImRvY3VtZW50LWFwaSIsImlkZW50aXR5LWFwaSIsIm90cC1hcGkiLCJwYXltZW50LWFwaSIsInByb2R1Y3QtYXBpIiwic2V0dGluZy1hcGkiLCJ1c2VyLWFwaSJdLCJjbGllbnRfaWQiOiJwYXNzby1tb2JpbGUiLCJzdWIiOiIzMzEzNTEyOTMyMkB0ZXN0ZWtpYmkuYml6IiwiYXV0aF90aW1lIjoxNjk4Njc0MjU5LCJpZHAiOiJsb2NhbCIsImlkIjoiMTU2OSIsImVtYWlsIjoiMzMxMzUxMjkzMjJAdGVzdGVraWJpLmJpeiIsImVtYWlsX3ZlcmlmaWVkIjoiVHJ1ZSIsInBob25lX251bWJlciI6IjkwNTU1MzMxMzUxMiIsInBob25lX251bWJlcl92ZXJpZmllZCI6IlRydWUiLCJnaXZlbl9uYW1lIjoiTVVIU8SwTiIsImZhbWlseV9uYW1lIjoiw4dBTENJIiwiYmlydGhkYXRlIjoiMTEvMDUvMjAwMyAwMDowMDowMCIsImdlbmRlciI6IkZlbWFsZSIsImhhdmVfcGFzc29saWciOiJUcnVlIiwianRpIjoiMDYyMDk3MDIzRkEwNkQwRjMwMjM4NkQzOUQ1Q0IxM0IiLCJpYXQiOjE2OTg2NzQyNTksInNjb3BlIjpbImJhc2tldC1hcGkiLCJkb2N1bWVudC1hcGkiLCJpZGVudGl0eS1hcGkiLCJvcGVuaWQiLCJvdHAtYXBpIiwicGF5bWVudC1hcGkiLCJwcm9kdWN0LWFwaSIsInByb2ZpbGUiLCJzZXR0aW5nLWFwaSIsInVzZXItYXBpIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbInB3ZCJdfQ.na4Z0ocP83fqRnGudY2vfqISBxALFHEukeYWvZLvldBYsjed_-rfgkNYm3_G4GrzQFR77C3wdI56KYlSVc_naCBOss4QgN1X56J7FekrpcuZTMsklYWNPmeEfOTntD9W-aMVrrh7p7FXH9MR9ZT9Ih7DggOGH7dBmlzCFg5njlmJUoSWIGddp7p3cfaDWtjwsQ-bh_qAGxURhb8p8tqIp66BeLcgELZ1iAZBdArzes8tcYoD6a_EQxSe0YOqrMLJvac6VfKoMnb9SUunfQ6AU9H59F84MMiZx6Rh4bllCLfGrrVY0ay6CAisk1eyQdwIAx1f7Swy4E4z0lXOk0cwnQ\"],\"x-correlation-id\":[\"2c563c30-ec82-4b0d-9633-3370aff3decb\"],\"x-environment-name\":[\"Test\"]}"
+    ],
+    "@version": [
+      "1"
+    ],
+    "Properties.RequestId": [
+      "0HMUP5CUDOGBQ:00000004"
+    ],
+    "Properties.MachineName.keyword": [
+      "identityserver-544977cfdb-9m4sj"
+    ],
+    "Properties.Application.keyword": [
+      "IdentityServer.Api"
+    ],
+    "Properties.LogLevel.keyword": [
+      "Request"
+    ],
+    "Properties.MachineName": [
+      "identityserver-544977cfdb-9m4sj"
+    ],
+    "RenderedMessage.keyword": [
+      "{\n  \"refresh_token\": [\n    \"44DFE28EE5A7FB97566474FD0248E6B22C7F7333FD4B9B904BCCBEA84564841D\"\n  ],\n  \"grant_type\": [\n    \"refresh_token\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"client_id\": [\n    \"passo-mobile\"\n  ]\n}"
+    ],
+    "Properties.Environment": [
+      "Test"
+    ],
+    "Properties.Host": [
+      "test-superapp.aktifbank.com.tr"
+    ],
+    "MessageTemplate.keyword": [
+      "{\n  \"refresh_token\": [\n    \"44DFE28EE5A7FB97566474FD0248E6B22C7F7333FD4B9B904BCCBEA84564841D\"\n  ],\n  \"grant_type\": [\n    \"refresh_token\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"client_id\": [\n    \"passo-mobile\"\n  ]\n}"
+    ],
+    "Properties.ConnectionId": [
+      "0HMUP5CUDOGBQ"
+    ],
+    "Properties.Schema.keyword": [
+      "http"
+    ],
+    "Properties.LogLevel": [
+      "Request"
+    ],
+    "Properties.Path.keyword": [
+      "/connect/token"
+    ],
+    "Properties.Path": [
+      "/connect/token"
+    ],
+    "@version.keyword": [
+      "1"
+    ],
+    "Properties.Application": [
+      "IdentityServer.Api"
+    ],
+    "Properties.Environment.keyword": [
+      "Test"
+    ],
+    "Properties.ClientAgent": [
+      "Apache-HttpClient/4.5.10 (Java/1.8.0_362)"
+    ],
+    "Properties.ClientAgent.keyword": [
+      "Apache-HttpClient/4.5.10 (Java/1.8.0_362)"
+    ],
+    "tags": [
+      "uat-passo"
+    ],
+    "MessageTemplate": [
+      "{\n  \"refresh_token\": [\n    \"44DFE28EE5A7FB97566474FD0248E6B22C7F7333FD4B9B904BCCBEA84564841D\"\n  ],\n  \"grant_type\": [\n    \"refresh_token\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"client_id\": [\n    \"passo-mobile\"\n  ]\n}"
+    ],
+    "Properties.Method.keyword": [
+      "POST"
+    ],
+    "Properties.SourceContext.keyword": [
+      "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware"
+    ],
+    "Properties.Schema": [
+      "http"
+    ],
+    "RenderedMessage": [
+      "{\n  \"refresh_token\": [\n    \"44DFE28EE5A7FB97566474FD0248E6B22C7F7333FD4B9B904BCCBEA84564841D\"\n  ],\n  \"grant_type\": [\n    \"refresh_token\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"client_id\": [\n    \"passo-mobile\"\n  ]\n}"
+    ],
+    "@timestamp": [
+      "2023-10-31T06:09:26.527Z"
+    ],
+    "Properties.SourceContext": [
+      "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware"
+    ],
+    "Properties.CorrelationId": [
+      "2c563c30-ec82-4b0d-9633-3370aff3decb"
+    ],
+    "Level.keyword": [
+      "Information"
+    ],
+    "Properties.Username": [
+      "Anonymous"
+    ],
+    "Properties.UserId": [
+      0
+    ],
+    "Level": [
+      "Information"
+    ],
+    "Properties.Username.keyword": [
+      "Anonymous"
+    ],
+    "Properties.RequestPath": [
+      "/connect/token"
+    ],
+    "Properties.ConnectionId.keyword": [
+      "0HMUP5CUDOGBQ"
+    ]
+  }
+}

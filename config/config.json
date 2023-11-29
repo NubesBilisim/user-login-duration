@@ -1,0 +1,176 @@
+{
+  "_index": "uat-passo-logs-000040",
+  "_type": "_doc",
+  "_id": "JD6viosBURuV7r1ofHD1",
+  "_score": 1,
+  "_ignored": [
+    "RenderedMessage.keyword",
+    "Properties.RequestHeader.keyword",
+    "MessageTemplate.keyword"
+  ],
+  "_source": {
+    "MessageTemplate": "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n    \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n    \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}",
+    "tags": [
+      "uat-passo"
+    ],
+    "Level": "Information",
+    "Timestamp": "<timestamp>",
+    "Properties": {
+      "SourceContext": "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware",
+      "Path": "/connect/token",
+      "CorrelationId": "b08c52d5-37e4-45b6-b0fa-695726708849",
+      "LogLevel": "Request",
+      "Method": "POST",
+      "RequestPath": "/connect/token",
+      "ClientAgent": "",
+      "Host": "test-dmzsuperapp.aktifbank.com.tr",
+      "Schema": "http",
+      "MachineName": "identityserver-6f6f9666b4-jm9mz",
+      "Environment": "Test",
+      "UserId": "<userId>",
+      "RequestId": "0HMTUDBFV51LH:00000002",
+      "RequestHeader": "{\"Accept\":[\"application/json, text/plain, */*\"],\"Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"Content-Type\":[\"application/x-www-form-urlencoded\"],\"Content-Length\":[\"320\"],\"X-Request-ID\":[\"62208975991f44ada30402d591e7f8a7\"],\"X-Real-IP\":[\"172.16.138.136\"],\"X-Forwarded-For\":[\"172.16.138.136\"],\"X-Forwarded-Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"X-Forwarded-Port\":[\"80\"],\"X-Forwarded-Proto\":[\"http\"],\"X-Forwarded-Scheme\":[\"http\"],\"X-Scheme\":[\"http\"],\"X-Original-Forwarded-For\":[\"172.16.3.155\"],\"x-correlation-id\":[\"b08c52d5-37e4-45b6-b0fa-695726708849\"],\"x-environment-name\":[\"Test\"]}",
+      "Application": "IdentityServer.Api",
+      "Username": "Anonymous",
+      "ConnectionId": "0HMTUDBFV51LH",
+      "QueryString": ""
+    },
+    "@version": "1",
+    "@timestamp": "2023-11-01T11:40:38.415Z",
+    "RenderedMessage": "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n  \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n  \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}"
+  },
+  "fields": {
+    "Properties.RequestId.keyword": [
+      "0HMTUDBFV51LH:00000002"
+    ],
+    "tags.keyword": [
+      "uat-passo"
+    ],
+    "Properties.QueryString.keyword": [
+      ""
+    ],
+    "Properties.Host.keyword": [
+      "test-dmzsuperapp.aktifbank.com.tr"
+    ],
+    "Timestamp": [
+      "2023-11-01T11:40:35.328Z"
+    ],
+    "Properties.CorrelationId.keyword": [
+      "b08c52d5-37e4-45b6-b0fa-695726708849"
+    ],
+    "Properties.QueryString": [
+      ""
+    ],
+    "Properties.Method": [
+      "POST"
+    ],
+    "Properties.RequestPath.keyword": [
+      "/connect/token"
+    ],
+    "Properties.RequestHeader": [
+      "{\"Accept\":[\"application/json, text/plain, */*\"],\"Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"Content-Type\":[\"application/x-www-form-urlencoded\"],\"Content-Length\":[\"320\"],\"X-Request-ID\":[\"62208975991f44ada30402d591e7f8a7\"],\"X-Real-IP\":[\"172.16.138.136\"],\"X-Forwarded-For\":[\"172.16.138.136\"],\"X-Forwarded-Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"X-Forwarded-Port\":[\"80\"],\"X-Forwarded-Proto\":[\"http\"],\"X-Forwarded-Scheme\":[\"http\"],\"X-Scheme\":[\"http\"],\"X-Original-Forwarded-For\":[\"172.16.3.155\"],\"x-correlation-id\":[\"b08c52d5-37e4-45b6-b0fa-695726708849\"],\"x-environment-name\":[\"Test\"]}"
+    ],
+    "@version": [
+      "1"
+    ],
+    "Properties.RequestId": [
+      "0HMTUDBFV51LH:00000002"
+    ],
+    "Properties.MachineName.keyword": [
+      "identityserver-6f6f9666b4-jm9mz"
+    ],
+    "Properties.Application.keyword": [
+      "IdentityServer.Api"
+    ],
+    "Properties.LogLevel.keyword": [
+      "Request"
+    ],
+    "Properties.MachineName": [
+      "identityserver-6f6f9666b4-jm9mz"
+    ],
+    "Properties.Environment": [
+      "Test"
+    ],
+    "Properties.Host": [
+      "test-dmzsuperapp.aktifbank.com.tr"
+    ],
+    "Properties.ConnectionId": [
+      "0HMTUDBFV51LH"
+    ],
+    "Properties.Schema.keyword": [
+      "http"
+    ],
+    "Properties.Path": [
+      "/connect/token"
+    ],
+    "Properties.LogLevel": [
+      "Request"
+    ],
+    "@version.keyword": [
+      "1"
+    ],
+    "Properties.Path.keyword": [
+      "/connect/token"
+    ],
+    "Properties.Application": [
+      "IdentityServer.Api"
+    ],
+    "Properties.ClientAgent": [
+      ""
+    ],
+    "Properties.Environment.keyword": [
+      "Test"
+    ],
+    "Properties.ClientAgent.keyword": [
+      ""
+    ],
+    "tags": [
+      "uat-passo"
+    ],
+    "MessageTemplate": [
+      "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n    \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n    \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}"
+    ],
+    "Properties.Method.keyword": [
+      "POST"
+    ],
+    "Properties.SourceContext.keyword": [
+      "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware"
+    ],
+    "Properties.Schema": [
+      "http"
+    ],
+    "@timestamp": [
+      "2023-11-01T11:40:38.415Z"
+    ],
+    "RenderedMessage": [
+      "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n    \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n    \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}"
+    ],
+    "Properties.SourceContext": [
+      "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware"
+    ],
+    "Level.keyword": [
+      "Information"
+    ],
+    "Properties.CorrelationId": [
+      "b08c52d5-37e4-45b6-b0fa-695726708849"
+    ],
+    "Properties.Username": [
+      "Anonymous"
+    ],
+    "Properties.UserId": [
+      0
+    ],
+    "Level": [
+      "Information"
+    ],
+    "Properties.Username.keyword": [
+      "Anonymous"
+    ],
+    "Properties.RequestPath": [
+      "/connect/token"
+    ],
+    "Properties.ConnectionId.keyword": [
+      "0HMTUDBFV51LH"
+    ]
+  }
+}

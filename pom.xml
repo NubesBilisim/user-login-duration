@@ -1,0 +1,248 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.confluent</groupId>
+    <artifactId>rest-utils-parent</artifactId>
+    <version>7.1.1</version>
+  </parent>
+
+  <groupId>com.nubes</groupId>
+  <artifactId>user-login-duration</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+
+  <organization>
+    <name>Nubes Bilisim</name>
+    <url>https://nubesbilisim.com/</url>
+  </organization>
+
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <properties>
+    <java.version>11</java.version>
+    <!--<java.version>1.8</java.version>-->
+    <io.confluent.schema-registry.version>${confluent.version.range}</io.confluent.schema-registry.version>
+    <avro.version>1.10.1</avro.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-streams</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-maven-plugin</artifactId>
+      <version>${avro.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-avro-serializer</artifactId>
+      <version>${io.confluent.schema-registry.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-streams-avro-serde</artifactId>
+      <version>${io.confluent.schema-registry.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-schema-registry-client</artifactId>
+      <version>${io.confluent.schema-registry.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>confluent-log4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.3.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>2.7.14</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-streams-test-utils</artifactId>
+      <version>${kafka.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-streams</artifactId>
+      <version>${kafka.version}</version>
+      <classifier>test</classifier>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <inherited>true</inherited>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+            <!--TODO: enable this once we have warnings under control<arg>-Werror</arg>-->
+          </compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <!-- exclude log4j.properties -->
+          <excludes>
+            <exclude>**/log4j.properties</exclude>
+          </excludes><!--
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.mkyong.core.utils.testing</mainClass>
+              <classpathPrefix>dependency-jars/</classpathPrefix>
+            </manifest>
+          </archive>-->
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro-maven-plugin</artifactId>
+        <version>${avro.version}</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>schema</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>src/main/resources/avro/com/nubes/streams/schema</sourceDirectory>
+              <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+              <stringType>String</stringType>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+          <archive>
+            <manifest>
+              <mainClass>com.nubes.streams.UserLoginDuration</mainClass>
+            </manifest>
+          </archive>
+          <descriptors>
+            <descriptor>src/assembly/standalone.xml</descriptor>
+          </descriptors>
+          <attach>false</attach>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <executions>
+          <!--
+           This declaration merges with the one in the parent, rather
+           than overriding it, so we need to disable the "validate" phase
+           execution that the parent declares and declare our own
+           during "test-compile".
+
+           One reason for this is that avro codegen runs during compile,
+           and while it's not strictly a precondition, it's
+           confusing to address style violations while the IDE is telling you
+           that some generated class doesn't exist. Test-compile is the first phase
+           that's guaranteed to run after compile and before any unit or integration
+           tests.
+
+           Also, we want to disable the parent's configuration because it declares stuff
+           we don't care about, like suppressions. (Honestly, it shouldn't)
+           -->
+          <execution>
+            <id>validate</id>
+            <phase>none</phase>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+          <!--
+          <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <configuration>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <failOnViolation>true</failOnViolation>
+              <includeResources>false</includeResources>
+              <includeTestResources>false</includeTestResources>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
+              <excludes>com/nubes/streams/schema/avro/**</excludes>
+              <configLocation>checkstyle.xml</configLocation>
+            </configuration>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+          -->
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

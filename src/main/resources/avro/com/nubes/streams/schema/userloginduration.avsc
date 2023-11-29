@@ -1,0 +1,14 @@
+{"namespace": "com.nubes.streams.schema.avro",
+ "type": "record",
+ "name": "UserWithLoginDuration",
+ "fields": [
+     {
+        "name": "loginTime",
+        "type": {
+            "type": "long",
+            "logicalType": "timestamp-millis"
+        }
+     },
+     {"name": "duration", "type": "long"}
+ ]
+}
