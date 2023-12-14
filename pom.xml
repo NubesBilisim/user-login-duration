@@ -34,7 +34,6 @@
 
   <properties>
     <java.version>11</java.version>
-    <!--<java.version>1.8</java.version>-->
     <io.confluent.schema-registry.version>${confluent.version.range}</io.confluent.schema-registry.version>
     <avro.version>1.10.1</avro.version>
   </properties>
@@ -69,6 +68,21 @@
       <groupId>io.confluent</groupId>
       <artifactId>kafka-schema-registry-client</artifactId>
       <version>${io.confluent.schema-registry.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>io.confluent</groupId>
@@ -138,17 +152,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <!-- exclude log4j.properties -->
           <excludes>
             <exclude>**/log4j.properties</exclude>
-          </excludes><!--
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>com.mkyong.core.utils.testing</mainClass>
-              <classpathPrefix>dependency-jars/</classpathPrefix>
-            </manifest>
-          </archive>-->
+          </excludes>
         </configuration>
       </plugin>
       <plugin>

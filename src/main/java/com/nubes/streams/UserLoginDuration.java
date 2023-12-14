@@ -2,9 +2,15 @@ package com.nubes.streams;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nubes.streams.schema.avro.UserLoginRecord;
 import com.nubes.streams.schema.avro.UserWithLoginDuration;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
+import org.apache.avro.generic.IndexedRecord;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.io.JsonEncoder;
+import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.*;
@@ -12,9 +18,11 @@ import org.apache.kafka.streams.kstream.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -30,6 +38,8 @@ import static java.util.Optional.ofNullable;
 public class UserLoginDuration {
     private static final Logger log = LoggerFactory.getLogger(UserLoginDuration.class);
 
+    public static Properties envProps = null;
+
     public static void main(String[] args){
         new UserLoginDuration().run(args);
     }
@@ -37,11 +47,11 @@ public class UserLoginDuration {
     private void run(String[] args) {
         log.debug("UserLoginDuration stream is starting.");
 
-        final String propFile = args.length > 0 ? args[0] : "configuration/dev.properties";
+        final String propFile = args.length > 0 ? args[0] : "config/dev.properties";
 
-        Properties envProperties = loadEnvProperties(propFile);
-        final Properties streamProperties = buildStreamProperties(envProperties);
-        Topology topology = buildTopology(envProperties);
+        envProps = loadEnvProperties(propFile);
+        final Properties streamProperties = buildStreamProperties();
+        Topology topology = buildTopology();
 
         final KafkaStreams kafkaStreams = new KafkaStreams(topology, streamProperties);
         final CountDownLatch latch = new CountDownLatch(1);
@@ -68,6 +78,7 @@ public class UserLoginDuration {
         System.exit(0);
     }
 
+
     private static Properties loadEnvProperties(String propFile) {
         Properties props = new Properties();
         try(InputStream input = new FileInputStream(propFile)) {
@@ -80,14 +91,14 @@ public class UserLoginDuration {
         return props;
     }
 
-    protected Properties buildStreamProperties(Properties envProps) {
+    protected Properties buildStreamProperties() {
         final Properties streamsConfiguration = new Properties();
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, envProps.getProperty("application.id"));
         streamsConfiguration.put(StreamsConfig.CLIENT_ID_CONFIG, envProps.getProperty("client.id"));
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, envProps.getProperty("bootstrap.servers"));
         streamsConfiguration.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, envProps.getProperty("schema.registry.url"));
-        streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Long().getClass().getName());
+        streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
         streamsConfiguration.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, envProps.getProperty("default.topic.replication.factor"));
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, envProps.getProperty("offset.reset.policy"));  // TODO: 11/20/2023 check for meaning
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, envProps.getProperty("commit.interval.ms.config"));
@@ -96,9 +107,9 @@ public class UserLoginDuration {
         return streamsConfiguration;
     }
 
-    private static Topology buildTopology(final Properties properties){
+    private static Topology buildTopology(){
 
-        final SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde = getUserWithLoginDurationSerde(properties);
+        final SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde = getUserWithLoginDurationSerde();
 
         final StreamsBuilder builder = new StreamsBuilder();
 
@@ -109,55 +120,125 @@ public class UserLoginDuration {
     }
 
     protected static void getUserLoginDuration(KStream<String, String> loginRecords, SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde) {
-        KGroupedStream<String, String> loginByUserId = loginRecords
+        KGroupedStream<Long, UserLoginRecord> loginByUserId = loginRecords
+                .peek((k, v) -> System.out.println(v))
                 .map((k,v)-> {
-                    String userId = UserLoginDuration.getUserIdFromJson(v);
-                    return new KeyValue<>(userId, v);
+                    UserLoginRecord loginRecord = generateUserLoginRecord(v);
+                    return new KeyValue<>(loginRecord.getUserId(), loginRecord);
                 })
+                .filter((k,v) -> v.getIsLoginConfig() || v.getIsRefreshToken())
                 .groupByKey();
 
         loginByUserId
-               .aggregate(() -> new UserWithLoginDuration(),
+                .aggregate(() -> new UserWithLoginDuration(),
                         (key, value, aggregate) -> {
-                            if(UserLoginDuration.isRefreshToken(value)){
+                            aggregate.setUsername(value.getUsername());
+                            aggregate.setUserId(value.getUserId());
+                            if(value.getIsRefreshToken()){
+                                int refreshTokenInterval = Integer.parseInt(envProps.getProperty(Constants.REFRESH_TOKEN_INTERVAL_KEY));
                                 if(aggregate.getLoginTime() == null){
-                                   log.warn(key + " : Login time could not be found! ");
-                                    aggregate.setLoginTime(UserLoginDuration.getTimeFromJson(value));
-                                    aggregate.setDuration(0L);
-                                }else {
-                                    Instant refreshTime = UserLoginDuration.getTimeFromJson(value);
-                                    Instant loginTime = aggregate.getLoginTime();
-                                    long duration = refreshTime.toEpochMilli() - loginTime.toEpochMilli();
-                                    aggregate.setDuration(duration);
+                                    log.warn(key + " : Login time could not be found! Seems that no config log was received.");
+                                    aggregate.setLoginTime(Instant.now());
+                                    aggregate.setUsername(value.getUsername());
+                                    aggregate.setUserId(value.getUserId());
+                                    aggregate.setRefreshTokenCount(1);
+                                    aggregate.setDuration(refreshTokenInterval);
+                                }else{
+                                    int refreshTokenCount = aggregate.getRefreshTokenCount() + 1;
+                                    aggregate.setRefreshTokenCount(refreshTokenCount);
+                                    aggregate.setDuration(refreshTokenCount * refreshTokenInterval);
                                 }
                             }else{
-                                aggregate.setLoginTime(UserLoginDuration.getTimeFromJson(value));
+                                aggregate.setUsername(value.getUsername());
+                                aggregate.setUserId(value.getUserId());
+                                aggregate.setLoginTime(Instant.now());
+                                aggregate.setRefreshTokenCount(0);
                                 aggregate.setDuration(0L);
                             }
                             return aggregate;
                         },
-                        Materialized.with(Serdes.String(), userWithLoginDurationSerde)
-                        )
+                        Materialized.with(Serdes.Long(), userWithLoginDurationSerde)
+                )
                 .toStream()
-                .mapValues(userDuration -> userDuration.getDuration())
-                .peek((k, v) -> System.out.println(k + " : " + v))
-                .peek((k,v) -> Calculate.callStatic())
-                .peek((k,v) -> new Calculate().callPublic())
-                .to(Constants.DURATION_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
+                .peek((k, v) ->log.warn(k + " : " + v))
+                .filter((k, v) -> v.getDuration() > 0L)
+                .mapValues(v -> convertToJson(v))
+                .to(Constants.DURATION_TOPIC, Produced.with(Serdes.Long(), Serdes.String()));
     }
 
-    public static SpecificAvroSerde<UserWithLoginDuration> getUserWithLoginDurationSerde(Properties properties) {
+    private static String convertToJson(UserWithLoginDuration record){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DatumWriter<IndexedRecord> writer = new SpecificDatumWriter<>(record.getClassSchema());
+            JsonEncoder encoder = EncoderFactory.get().jsonEncoder(record.getClassSchema(), baos, false);
+            writer.write(record, encoder);
+            encoder.flush();
+            baos.flush();
+            return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+        }catch (Exception e){
+            log.error("Exception occured : ", e);
+        }
+        return "";
+    }
+
+
+    public static SpecificAvroSerde<UserWithLoginDuration> getUserWithLoginDurationSerde() {
         final SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde = new SpecificAvroSerde<>();
-        userWithLoginDurationSerde.configure(getSerdeConfig(properties), false);
+        userWithLoginDurationSerde.configure(getSerdeConfig(), false);
         return userWithLoginDurationSerde;
     }
 
-    protected static Map<String, String> getSerdeConfig(Properties config) {
+    protected static Map<String, String> getSerdeConfig() {
         final HashMap<String, String> map = new HashMap<>();
 
-        final String srUrlConfig = config.getProperty(SCHEMA_REGISTRY_URL_CONFIG);
+        final String srUrlConfig = envProps.getProperty(SCHEMA_REGISTRY_URL_CONFIG);
         map.put(SCHEMA_REGISTRY_URL_CONFIG, ofNullable(srUrlConfig).orElse(""));
         return map;
+    }
+
+
+    private static UserLoginRecord generateUserLoginRecord(String json) {
+        UserLoginRecord loginRecord = new UserLoginRecord();
+
+        long userId = 0;
+        String username = null;
+        String logLevel = null;
+        String grantType = null;
+        String path = null;
+
+        Map source = getSourceFromJson(json);
+        if (source != null) {
+            Map properties = (Map) source.get(Constants.JSON_PROPERTIES_KEY);
+
+            if (properties != null) {
+                userId = ((Number)properties.get(Constants.JSON_USERID_KEY)).longValue();
+                username = (String) properties.get(Constants.JSON_USERNAME_KEY);
+                path = (String) properties.get(Constants.JSON_PATH_KEY);
+                logLevel = (String) properties.get(Constants.JSON_LOG_LEVEL_KEY);
+                grantType = (String) properties.get(Constants.JSON_GRANT_TYPE_KEY);
+
+            }
+/*
+            String msgTemplate = (String) source.get("MessageTemplate");
+
+            if (msgTemplate != null) {
+                isGrantTypeEqualsRefreshToken = msgTemplate.contains("\"grant_type\": [\n" +
+                        "    \"refresh_token\"\n" +
+                        "  ]");
+            }
+
+ */
+        }
+
+        loginRecord.setUserId(userId);
+        loginRecord.setUsername(username);
+        loginRecord.setIsRefreshToken(Constants.REFRESH_TOKEN.equals(grantType)
+                && Constants.REFRESH_TOKEN_PATH.equals(path));
+
+        loginRecord.setIsLoginConfig(Constants.CONFIG_PATH.equals(path)
+                && Constants.LOG_LEVEL.RESPONSE.getName().equals(logLevel));
+
+        return loginRecord;
     }
 
     private static String getUserIdFromJson(String json) {
@@ -192,19 +273,33 @@ public class UserLoginDuration {
 
     private static boolean isRefreshToken(String json) {
 
+        boolean isGrantTypeEqualsRefreshToken = false;
+        boolean isRequestPathEqualsToken = false;
+        boolean isLogLevelEqualsRequest = false;
+
         Map source = getSourceFromJson(json);
 
         if (source != null) {
             String msgTemplate = (String) source.get("MessageTemplate");
 
             if (msgTemplate != null) {
-                /*String refreshToken = (String) msgTemplate.get("refresh_token");
-                if(refreshToken != null)
-                    return true;*/
-                return msgTemplate.contains("refresh_token");
+                isGrantTypeEqualsRefreshToken = msgTemplate.contains("\"grant_type\": [\n" +
+                        "    \"refresh_token\"\n" +
+                        "  ]");
+            }
+
+            Map properties = (Map) source.get("Properties");
+            if (properties != null) {
+                String requestPath = (String) properties.get("RequestPath");
+                isRequestPathEqualsToken = requestPath.equals("/connect/token");
+
+                String logLevel = (String) properties.get("LogLevel");
+                isLogLevelEqualsRequest = logLevel.equals("Request");
             }
         }
-        return false;
+        return isGrantTypeEqualsRefreshToken
+                && isRequestPathEqualsToken
+                && isLogLevelEqualsRequest;
     }
 
     private static Map getSourceFromJson(String json) {

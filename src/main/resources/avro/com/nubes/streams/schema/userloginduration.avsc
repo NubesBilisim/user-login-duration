@@ -2,6 +2,9 @@
  "type": "record",
  "name": "UserWithLoginDuration",
  "fields": [
+     {"name": "userId", "type": "long"},
+     {"name": "username", "type": "string"},
+     {"name": "refreshTokenCount", "type": "int"},
      {
         "name": "loginTime",
         "type": {

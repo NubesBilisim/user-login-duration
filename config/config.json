@@ -1,137 +1,147 @@
 {
-  "_index": "uat-passo-logs-000040",
+  "_index": "uat-passo-logs-000046",
   "_type": "_doc",
-  "_id": "JD6viosBURuV7r1ofHD1",
+  "_id": "X_N4JIwBXDkyqYUHqbYE",
   "_score": 1,
   "_ignored": [
     "RenderedMessage.keyword",
-    "Properties.RequestHeader.keyword",
     "MessageTemplate.keyword"
   ],
   "_source": {
-    "MessageTemplate": "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n    \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n    \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}",
+    "@version": "1",
     "tags": [
       "uat-passo"
     ],
+    "Timestamp": "2023-12-01T08:22:15.5481706+00:00",
+    "RenderedMessage": "{\n  \"result\": {\n    \"application\": {\n      \"mobileInfo\": {\n        \"mobileOS\": \"IOS\",\n        \"forceUpdate\": false,\n        \"maintenanceMode\": false,\n        \"downloadLink\": \"https://apps.apple.com/tr/app/passo/id1138434517\"\n      }\n    }\n  },\n  \"success\": true,\n  \"error\": null,\n  \"requestId\": \"0HMVI8MUO6CV1:00000002\"\n}",
+    "@timestamp": "2023-12-01T08:22:16.478Z",
     "Level": "Information",
-    "Timestamp": "<timestamp>",
     "Properties": {
-      "SourceContext": "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware",
-      "Path": "/connect/token",
-      "CorrelationId": "b08c52d5-37e4-45b6-b0fa-695726708849",
-      "LogLevel": "Request",
-      "Method": "POST",
-      "RequestPath": "/connect/token",
-      "ClientAgent": "",
-      "Host": "test-dmzsuperapp.aktifbank.com.tr",
-      "Schema": "http",
-      "MachineName": "identityserver-6f6f9666b4-jm9mz",
+      "RequestId": "0HMVI8MUO6CV1:00000002",
+      "StatusCode": 200,
+      "Path": "/api/v1/account/configurations",
+      "ResponseHeader": "{\"Content-Type\":[\"application/json; charset=utf-8\"]}",
+      "QueryString": "{\n  \"mobileVersion\": \"3.0.0\",\n  \"os\": \"ios\"\n}",
+      "Method": "GET",
+      "Application": "Identity.WebApi",
       "Environment": "Test",
-      "UserId": "<userId>",
-      "RequestId": "0HMTUDBFV51LH:00000002",
-      "RequestHeader": "{\"Accept\":[\"application/json, text/plain, */*\"],\"Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"Content-Type\":[\"application/x-www-form-urlencoded\"],\"Content-Length\":[\"320\"],\"X-Request-ID\":[\"62208975991f44ada30402d591e7f8a7\"],\"X-Real-IP\":[\"172.16.138.136\"],\"X-Forwarded-For\":[\"172.16.138.136\"],\"X-Forwarded-Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"X-Forwarded-Port\":[\"80\"],\"X-Forwarded-Proto\":[\"http\"],\"X-Forwarded-Scheme\":[\"http\"],\"X-Scheme\":[\"http\"],\"X-Original-Forwarded-For\":[\"172.16.3.155\"],\"x-correlation-id\":[\"b08c52d5-37e4-45b6-b0fa-695726708849\"],\"x-environment-name\":[\"Test\"]}",
-      "Application": "IdentityServer.Api",
-      "Username": "Anonymous",
-      "ConnectionId": "0HMTUDBFV51LH",
-      "QueryString": ""
+      "UserId": <userId>,
+      "Host": "test-superapp.aktifbank.com.tr",
+      "CorrelationId": "08f37b5b-20ad-4f5e-9463-e36b45a86b88",
+      "ClientAgent": "Apache-HttpClient/4.5.10 (Java/1.8.0_362)",
+      "DurationMilliseconds": 226,
+      "ConnectionId": "0HMVI8MUO6CV1",
+      "SourceContext": "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware",
+      "LogLevel": "Response",
+      "MachineName": "identity-78bdbd4fc4-kz4ff",
+      "RequestPath": "/api/v1/account/configurations",
+      "Schema": "http",
+      "Username": "50544382438@testekibi.biz"
     },
-    "@version": "1",
-    "@timestamp": "2023-11-01T11:40:38.415Z",
-    "RenderedMessage": "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n  \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n  \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}"
+    "MessageTemplate": "{\n  \"result\": {\n    \"application\": {\n      \"mobileInfo\": {\n        \"mobileOS\": \"IOS\",\n        \"forceUpdate\": false,\n        \"maintenanceMode\": false,\n        \"downloadLink\": \"https://apps.apple.com/tr/app/passo/id1138434517\"\n      }\n    }\n  },\n  \"success\": true,\n  \"error\": null,\n  \"requestId\": \"0HMVI8MUO6CV1:00000002\"\n}"
   },
   "fields": {
+    "Properties.StatusCode": [
+      200
+    ],
     "Properties.RequestId.keyword": [
-      "0HMTUDBFV51LH:00000002"
+      "0HMVI8MUO6CV1:00000002"
     ],
     "tags.keyword": [
       "uat-passo"
     ],
     "Properties.QueryString.keyword": [
-      ""
+      "{\n  \"mobileVersion\": \"3.0.0\",\n  \"os\": \"ios\"\n}"
     ],
     "Properties.Host.keyword": [
-      "test-dmzsuperapp.aktifbank.com.tr"
+      "test-superapp.aktifbank.com.tr"
     ],
     "Timestamp": [
-      "2023-11-01T11:40:35.328Z"
+      "2023-12-01T08:22:15.548Z"
     ],
     "Properties.CorrelationId.keyword": [
-      "b08c52d5-37e4-45b6-b0fa-695726708849"
+      "08f37b5b-20ad-4f5e-9463-e36b45a86b88"
     ],
     "Properties.QueryString": [
-      ""
+      "{\n  \"mobileVersion\": \"3.0.0\",\n  \"os\": \"ios\"\n}"
     ],
     "Properties.Method": [
-      "POST"
+      "GET"
     ],
     "Properties.RequestPath.keyword": [
-      "/connect/token"
-    ],
-    "Properties.RequestHeader": [
-      "{\"Accept\":[\"application/json, text/plain, */*\"],\"Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"Content-Type\":[\"application/x-www-form-urlencoded\"],\"Content-Length\":[\"320\"],\"X-Request-ID\":[\"62208975991f44ada30402d591e7f8a7\"],\"X-Real-IP\":[\"172.16.138.136\"],\"X-Forwarded-For\":[\"172.16.138.136\"],\"X-Forwarded-Host\":[\"test-dmzsuperapp.aktifbank.com.tr\"],\"X-Forwarded-Port\":[\"80\"],\"X-Forwarded-Proto\":[\"http\"],\"X-Forwarded-Scheme\":[\"http\"],\"X-Scheme\":[\"http\"],\"X-Original-Forwarded-For\":[\"172.16.3.155\"],\"x-correlation-id\":[\"b08c52d5-37e4-45b6-b0fa-695726708849\"],\"x-environment-name\":[\"Test\"]}"
+      "/api/v1/account/configurations"
     ],
     "@version": [
       "1"
     ],
     "Properties.RequestId": [
-      "0HMTUDBFV51LH:00000002"
+      "0HMVI8MUO6CV1:00000002"
     ],
     "Properties.MachineName.keyword": [
-      "identityserver-6f6f9666b4-jm9mz"
+      "identity-78bdbd4fc4-kz4ff"
+    ],
+    "Properties.ResponseHeader.keyword": [
+      "{\"Content-Type\":[\"application/json; charset=utf-8\"]}"
     ],
     "Properties.Application.keyword": [
-      "IdentityServer.Api"
+      "Identity.WebApi"
     ],
     "Properties.LogLevel.keyword": [
-      "Request"
+      "Response"
     ],
     "Properties.MachineName": [
-      "identityserver-6f6f9666b4-jm9mz"
+      "identity-78bdbd4fc4-kz4ff"
+    ],
+    "Properties.DurationMilliseconds": [
+      226
     ],
     "Properties.Environment": [
       "Test"
     ],
     "Properties.Host": [
-      "test-dmzsuperapp.aktifbank.com.tr"
+      "test-superapp.aktifbank.com.tr"
     ],
     "Properties.ConnectionId": [
-      "0HMTUDBFV51LH"
+      "0HMVI8MUO6CV1"
     ],
     "Properties.Schema.keyword": [
       "http"
     ],
     "Properties.Path": [
-      "/connect/token"
+      "/api/v1/account/configurations"
     ],
     "Properties.LogLevel": [
-      "Request"
+      "Response"
     ],
     "@version.keyword": [
       "1"
     ],
     "Properties.Path.keyword": [
-      "/connect/token"
+      "/api/v1/account/configurations"
     ],
     "Properties.Application": [
-      "IdentityServer.Api"
+      "Identity.WebApi"
     ],
     "Properties.ClientAgent": [
-      ""
+      "Apache-HttpClient/4.5.10 (Java/1.8.0_362)"
     ],
     "Properties.Environment.keyword": [
       "Test"
     ],
     "Properties.ClientAgent.keyword": [
-      ""
+      "Apache-HttpClient/4.5.10 (Java/1.8.0_362)"
+    ],
+    "Properties.ResponseHeader": [
+      "{\"Content-Type\":[\"application/json; charset=utf-8\"]}"
     ],
     "tags": [
       "uat-passo"
     ],
     "MessageTemplate": [
-      "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n    \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n    \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}"
+      "{\n  \"result\": {\n    \"application\": {\n      \"mobileInfo\": {\n        \"mobileOS\": \"IOS\",\n        \"forceUpdate\": false,\n        \"maintenanceMode\": false,\n        \"downloadLink\": \"https://apps.apple.com/tr/app/passo/id1138434517\"\n      }\n    }\n  },\n  \"success\": true,\n  \"error\": null,\n  \"requestId\": \"0HMVI8MUO6CV1:00000002\"\n}"
     ],
     "Properties.Method.keyword": [
-      "POST"
+      "GET"
     ],
     "Properties.SourceContext.keyword": [
       "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware"
@@ -140,10 +150,10 @@
       "http"
     ],
     "@timestamp": [
-      "2023-11-01T11:40:38.415Z"
+      "2023-12-01T08:22:16.478Z"
     ],
     "RenderedMessage": [
-      "{\n  \"client_id\": [\n    \"passo-mobile\"\n  ],\n  \"client_secret\": [\n    \"secret\"\n  ],\n  \"grant_type\": [\n    \"password\"\n  ],\n  \"scope\": [\n    \"openid profile offline_access identity-api otp-api basket-api product-api setting-api document-api user-api payment-api\"\n  ],\n  \"username\": [\n    \"50544382438@testekibi.biz\"\n  ],\n  \"password\": \"***\",\n  \"deviceToken\": [\n    \"Postman S1nan\"\n  ],\n  \"phoneNumber\": [\n    \"905555054438\"\n  ]\n}"
+      "{\n  \"result\": {\n    \"application\": {\n      \"mobileInfo\": {\n        \"mobileOS\": \"IOS\",\n        \"forceUpdate\": false,\n        \"maintenanceMode\": false,\n        \"downloadLink\": \"https://apps.apple.com/tr/app/passo/id1138434517\"\n      }\n    }\n  },\n  \"success\": true,\n  \"error\": null,\n  \"requestId\": \"0HMVI8MUO6CV1:00000002\"\n}"
     ],
     "Properties.SourceContext": [
       "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware"
@@ -152,25 +162,25 @@
       "Information"
     ],
     "Properties.CorrelationId": [
-      "b08c52d5-37e4-45b6-b0fa-695726708849"
+      "08f37b5b-20ad-4f5e-9463-e36b45a86b88"
     ],
     "Properties.Username": [
-      "Anonymous"
+      "50544382438@testekibi.biz"
     ],
     "Properties.UserId": [
-      0
+      1343
     ],
     "Level": [
       "Information"
     ],
     "Properties.Username.keyword": [
-      "Anonymous"
+      "50544382438@testekibi.biz"
     ],
     "Properties.RequestPath": [
-      "/connect/token"
+      "/api/v1/account/configurations"
     ],
     "Properties.ConnectionId.keyword": [
-      "0HMTUDBFV51LH"
+      "0HMVI8MUO6CV1"
     ]
   }
 }

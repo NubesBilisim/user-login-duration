@@ -17,17 +17,16 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 
 public class UserLoginDurationTest {
@@ -48,12 +47,14 @@ public class UserLoginDurationTest {
         mockProps.put("offset.reset.policy", "earliest");
         mockProps.put("commit.interval.ms.config", "10000");
         mockProps.put("state.dir.config", "/tmp/kafka-streams");
+        mockProps.put("refresh.token.interval", "10");
 
+        UserLoginDuration.envProps = mockProps;
         final UserLoginDuration userLoginDuration = new UserLoginDuration();
-        final Properties streamProps = userLoginDuration.buildStreamProperties(mockProps);
+        final Properties streamProps = userLoginDuration.buildStreamProperties();
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
-        final SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde = UserLoginDuration.getUserWithLoginDurationSerde(mockProps);
+        final SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde = UserLoginDuration.getUserWithLoginDurationSerde();
 
         final KStream<String, String> loginRecords = streamsBuilder.stream(Constants.LOGIN_TOPIC, Consumed.with(Serdes.String(), Serdes.String()));
         UserLoginDuration.getUserLoginDuration(loginRecords, userWithLoginDurationSerde);
@@ -73,19 +74,31 @@ public class UserLoginDurationTest {
                 new StringSerializer(),
                 new StringSerializer());
 
-        List<String> msgs = prepareLoginRecord("John", 1);
+        String userId = "1323";
+        int refreshTokenCount = 3;
 
-        inputTopic.pipeKeyValueList(asList(
-                new KeyValue<String, String>("", msgs.get(0)),
-                new KeyValue<String, String>("", msgs.get(1))));
+        List<String> msgs = prepareLoginRecord(userId, refreshTokenCount);
 
-        final TestOutputTopic<String, Long> outputTopic = testDriver.createOutputTopic(Constants.DURATION_TOPIC,
-                new StringDeserializer(),
-                new LongDeserializer());
+        List<KeyValue<String, String>> inputList = new ArrayList<>();
+        for(String msg : msgs){
+            inputList.add(new KeyValue<String, String>("", msg));
+        }
 
-        final List<KeyValue<String, Long>> keyValues = outputTopic.readKeyValuesToList();
-        final KeyValue<String, Long> keyValue = keyValues.get(1);
-        MatcherAssert.assertThat(keyValue, equalTo(new KeyValue<>("John", 60000L)));
+        inputTopic.pipeKeyValueList(inputList);
+
+        final TestOutputTopic<Long, String> outputTopic = testDriver.createOutputTopic(Constants.DURATION_TOPIC,
+                new LongDeserializer(),
+                new StringDeserializer());
+
+        final List<KeyValue<Long, String>> keyValues = outputTopic.readKeyValuesToList();
+        final KeyValue<Long, String> keyValue = keyValues.get(keyValues.size()-1);
+        int duration = refreshTokenCount * Integer.parseInt(UserLoginDuration.envProps.getProperty(Constants.REFRESH_TOKEN_INTERVAL_KEY));
+        long loginTime = Instant.now().toEpochMilli();
+        String expectedValue = "{\"userId\":" + userId + ",\"username\":\"mert.igdir@hotmail.com\",\"refreshTokenCount\":1,\"loginTime\":" + loginTime + ",\"duration\":" + duration + "}";
+        assertThat(keyValue.key, equalTo(Long.parseLong(userId)));
+        assertThat(keyValue.value, startsWith("{\"userId\":" + userId));
+        assertThat(keyValue.value, containsString("\"refreshTokenCount\":" + refreshTokenCount));
+        assertThat(keyValue.value, containsString("\"duration\":" + duration));
 /*
         final KeyValueStore<String, Long>
                 keyValueStore =
@@ -97,7 +110,7 @@ public class UserLoginDurationTest {
  */
     }
 
-    private static List<String> prepareLoginRecord(String userId, int refreshTokenInterval) throws IOException {
+    private static List<String> prepareLoginRecord(String userId, int refreshTokenCount) throws IOException {
         String refreshFilePath = "config/refresh token.json";
         String configFilePath = "config/config.json";
 
@@ -108,9 +121,14 @@ public class UserLoginDurationTest {
                 .withZone(ZoneId.systemDefault());
         ZonedDateTime zdt = ZonedDateTime.of(LocalDate.now(), LocalTime.of(1, 0, 0), ZoneId.systemDefault());
 
-        String loginMsg = configJson.replace("<userId>", userId).replace("<timestamp>", formatter.format(zdt));
-        String refreshMsg = refreshJson.replace("<userId>", userId).replace("<timestamp>", formatter.format(zdt.plus(refreshTokenInterval, ChronoUnit.MINUTES)));
-        return asList(loginMsg, refreshMsg);
+        List<String> msgList = new ArrayList<>();
+        String loginMsg = configJson.replace("<userId>", userId);
+        msgList.add(loginMsg);
+        for(int i=0; i<refreshTokenCount; i++) {
+            String refreshMsg = refreshJson.replace("<userId>", userId);
+            msgList.add(refreshMsg);
+        }
+        return msgList;
     }
 
     @After

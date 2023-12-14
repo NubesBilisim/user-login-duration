@@ -36,17 +36,17 @@ public class LoginDurationConsumer {
         final Properties consumerProperties = new Properties();
         consumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         consumerProperties.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
-        consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, Serdes.Long().deserializer().getClass());
+        consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, Serdes.Long().deserializer().getClass());
+        consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG,
                 "pageview-region-lambda-example-consumer");
         consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        try (final KafkaConsumer<String, Long> consumer = new KafkaConsumer<>(consumerProperties)) {
+        try (final KafkaConsumer<Long, String> consumer = new KafkaConsumer<>(consumerProperties)) {
             consumer.subscribe(Collections.singleton(Constants.DURATION_TOPIC));
             while (true) {
-                final ConsumerRecords<String, Long> consumerRecords = consumer.poll(Duration.ofMillis(Long.MAX_VALUE));
-                for (final ConsumerRecord<String, Long> consumerRecord : consumerRecords) {
+                final ConsumerRecords<Long, String> consumerRecords = consumer.poll(Duration.ofMillis(Long.MAX_VALUE));
+                for (final ConsumerRecord<Long, String> consumerRecord : consumerRecords) {
                     System.out.println(consumerRecord.key() + ":" + consumerRecord.value());
                 }
             }

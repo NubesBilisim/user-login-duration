@@ -1,0 +1,10 @@
+{"namespace": "com.nubes.streams.schema.avro",
+ "type": "record",
+ "name": "UserLoginRecord",
+ "fields": [
+     {"name": "userId", "type": "long"},
+     {"name": "username", "type": "string"},
+     {"name": "isRefreshToken", "type": "boolean"},
+     {"name": "isLoginConfig", "type": "boolean"}
+ ]
+}

@@ -50,8 +50,6 @@ public class LoginDurationDriver {
             int choice = in.nextInt();
             System.out.println("Enter UserId : ");
             String userId = in.next();
-            System.out.println("Enter interval in min :");
-            int interval = in.nextInt();
 
             String msg = refreshJson;
             if (choice == 1) {
@@ -59,17 +57,12 @@ public class LoginDurationDriver {
             }
 
             msg = msg.replace("<userId>", userId);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)
-                    .withZone(ZoneId.systemDefault());
-            ZonedDateTime zdt = ZonedDateTime.of(LocalDate.now(), LocalTime.of(1, 0, 0), ZoneId.systemDefault());
-            System.out.println("*** " + formatter.format(zdt.plus(interval, ChronoUnit.MINUTES)));
-            msg = msg.replace("<timestamp>", formatter.format(zdt.plus(interval, ChronoUnit.MINUTES)));
 
             try (final KafkaProducer<String, String> producer = new KafkaProducer<>(props)) {
-                for (final String user : users) {
+            //    for (final String user : users) {
                     producer.send(new ProducerRecord<>(Constants.LOGIN_TOPIC, null, msg));
                     // For each user generate some page views
-                }
+           //     }
             }
         }
     }
