@@ -121,7 +121,6 @@ public class UserLoginDuration {
 
     protected static void getUserLoginDuration(KStream<String, String> loginRecords, SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde) {
         KGroupedStream<Long, UserLoginRecord> loginByUserId = loginRecords
-                .peek((k, v) -> System.out.println(v))
                 .map((k,v)-> {
                     UserLoginRecord loginRecord = generateUserLoginRecord(v);
                     return new KeyValue<>(loginRecord.getUserId(), loginRecord);
@@ -136,9 +135,9 @@ public class UserLoginDuration {
                             aggregate.setUserId(value.getUserId());
                             if(value.getIsRefreshToken()){
                                 int refreshTokenInterval = Integer.parseInt(envProps.getProperty(Constants.REFRESH_TOKEN_INTERVAL_KEY));
-                                if(aggregate.getLoginTime() == null){
+                                if(aggregate.getConfigLogReadTime() == null){
                                     log.warn(key + " : Login time could not be found! Seems that no config log was received.");
-                                    aggregate.setLoginTime(Instant.now());
+                                    aggregate.setConfigLogReadTime(Instant.now());
                                     aggregate.setUsername(value.getUsername());
                                     aggregate.setUserId(value.getUserId());
                                     aggregate.setRefreshTokenCount(1);
@@ -151,7 +150,7 @@ public class UserLoginDuration {
                             }else{
                                 aggregate.setUsername(value.getUsername());
                                 aggregate.setUserId(value.getUserId());
-                                aggregate.setLoginTime(Instant.now());
+                                aggregate.setConfigLogReadTime(Instant.now());
                                 aggregate.setRefreshTokenCount(0);
                                 aggregate.setDuration(0L);
                             }
@@ -160,7 +159,7 @@ public class UserLoginDuration {
                         Materialized.with(Serdes.Long(), userWithLoginDurationSerde)
                 )
                 .toStream()
-                .peek((k, v) ->log.warn(k + " : " + v))
+                .peek((k, v) ->log.debug(k + " : " + v))
                 .filter((k, v) -> v.getDuration() > 0L)
                 .mapValues(v -> convertToJson(v))
                 .to(Constants.DURATION_TOPIC, Produced.with(Serdes.Long(), Serdes.String()));
@@ -174,7 +173,7 @@ public class UserLoginDuration {
             writer.write(record, encoder);
             encoder.flush();
             baos.flush();
-            return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+            return baos.toString(StandardCharsets.UTF_8);
         }catch (Exception e){
             log.error("Exception occured : ", e);
         }
@@ -230,13 +229,21 @@ public class UserLoginDuration {
  */
         }
 
+        String refreshTokenPath = envProps.getProperty(Constants.REFRESH_TOKEN_PATH_KEY, Constants.REFRESH_TOKEN_PATH);
+        String configLogPath = envProps.getProperty(Constants.CONFIG_LOG_PATH_KEY, Constants.CONFIG_LOG_PATH);
+
         loginRecord.setUserId(userId);
         loginRecord.setUsername(username);
-        loginRecord.setIsRefreshToken(Constants.REFRESH_TOKEN.equals(grantType)
-                && Constants.REFRESH_TOKEN_PATH.equals(path));
 
-        loginRecord.setIsLoginConfig(Constants.CONFIG_PATH.equals(path)
-                && Constants.LOG_LEVEL.RESPONSE.getName().equals(logLevel));
+        boolean isRefreshToken = Constants.REFRESH_TOKEN.equals(grantType)
+                && refreshTokenPath.equals(path);
+        loginRecord.setIsRefreshToken(isRefreshToken);
+
+        boolean isConfigLog = configLogPath.equals(path)
+                && Constants.LOG_LEVEL.RESPONSE.getName().equals(logLevel);
+        loginRecord.setIsLoginConfig(isConfigLog);
+
+        log.debug("The record read from " + Constants.LOGIN_TOPIC + " contains userId : " + userId + ", Config Log : " + isConfigLog + ", Refresh Token : " + isRefreshToken);
 
         return loginRecord;
     }

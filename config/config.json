@@ -19,7 +19,7 @@
     "Properties": {
       "RequestId": "0HMVI8MUO6CV1:00000002",
       "StatusCode": 200,
-      "Path": "/api/v1/account/configurations",
+      "Path": "/api/v1/account/info",
       "ResponseHeader": "{\"Content-Type\":[\"application/json; charset=utf-8\"]}",
       "QueryString": "{\n  \"mobileVersion\": \"3.0.0\",\n  \"os\": \"ios\"\n}",
       "Method": "GET",
@@ -34,7 +34,7 @@
       "SourceContext": "WebApi.Common.Log.ApiRequestResponseLoggerMiddleware",
       "LogLevel": "Response",
       "MachineName": "identity-78bdbd4fc4-kz4ff",
-      "RequestPath": "/api/v1/account/configurations",
+      "RequestPath": "/api/v1/account/info",
       "Schema": "http",
       "Username": "50544382438@testekibi.biz"
     },

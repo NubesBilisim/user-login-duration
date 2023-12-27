@@ -5,8 +5,10 @@ public interface Constants {
     String DURATION_TOPIC = "login-durations";
     String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSXXX";
     String REFRESH_TOKEN_INTERVAL_KEY = "refresh.token.interval";
+    String REFRESH_TOKEN_PATH_KEY = "refresh.token.path";
+    String CONFIG_LOG_PATH_KEY = "config.log.path";
     String REFRESH_TOKEN = "refresh_token";
-    String CONFIG_PATH = "/api/v1/account/configurations";
+    String CONFIG_LOG_PATH = "/api/v1/account/info";
     String REFRESH_TOKEN_PATH = "/connect/token";
     String JSON_PROPERTIES_KEY = "Properties";
     String JSON_USERID_KEY = "UserId";
@@ -15,11 +17,11 @@ public interface Constants {
     String JSON_LOG_LEVEL_KEY = "LogLevel";
     String JSON_GRANT_TYPE_KEY = "GrantType";
 
-    public enum LOG_LEVEL{
+    enum LOG_LEVEL{
         REQUEST("Request"),
         RESPONSE("Response");
-        private String name;
-        private LOG_LEVEL(String name) {
+        private final String name;
+        LOG_LEVEL(String name) {
             this.name = name;
         }
         public String getName()

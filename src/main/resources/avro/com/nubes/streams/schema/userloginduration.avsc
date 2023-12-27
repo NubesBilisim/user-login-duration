@@ -6,7 +6,7 @@
      {"name": "username", "type": "string"},
      {"name": "refreshTokenCount", "type": "int"},
      {
-        "name": "loginTime",
+        "name": "configLogReadTime",
         "type": {
             "type": "long",
             "logicalType": "timestamp-millis"
