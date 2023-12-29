@@ -40,7 +40,7 @@ public class UserLoginDuration {
 
     public static Properties envProps = null;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new UserLoginDuration().run(args);
     }
 
@@ -56,7 +56,7 @@ public class UserLoginDuration {
         final KafkaStreams kafkaStreams = new KafkaStreams(topology, streamProperties);
         final CountDownLatch latch = new CountDownLatch(1);
 
-        Runtime.getRuntime().addShutdownHook(new Thread("login-duration-streams-shutdown-hook"){
+        Runtime.getRuntime().addShutdownHook(new Thread("login-duration-streams-shutdown-hook") {
             @Override
             public void run() {
                 log.warn("UserLoginDuration stream is closing");
@@ -71,7 +71,7 @@ public class UserLoginDuration {
             kafkaStreams.cleanUp();
             kafkaStreams.start();
             latch.await();
-        }catch (Throwable e){
+        } catch (Throwable e) {
             log.error("Exception ", e);
             System.exit(1);
         }
@@ -81,11 +81,9 @@ public class UserLoginDuration {
 
     private static Properties loadEnvProperties(String propFile) {
         Properties props = new Properties();
-        try(InputStream input = new FileInputStream(propFile)) {
+        try (InputStream input = new FileInputStream(propFile)) {
             props.load(input);
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException("Unable to find the specified properties file");
         }
         return props;
@@ -107,25 +105,25 @@ public class UserLoginDuration {
         return streamsConfiguration;
     }
 
-    private static Topology buildTopology(){
+    private static Topology buildTopology() {
 
         final SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde = getUserWithLoginDurationSerde();
 
         final StreamsBuilder builder = new StreamsBuilder();
 
         final KStream<String, String> loginRecords = builder.stream(Constants.LOGIN_TOPIC, Consumed.with(Serdes.String(), Serdes.String()));
-        getUserLoginDuration(loginRecords,userWithLoginDurationSerde);
+        getUserLoginDuration(loginRecords, userWithLoginDurationSerde);
 
         return builder.build();
     }
 
     protected static void getUserLoginDuration(KStream<String, String> loginRecords, SpecificAvroSerde<UserWithLoginDuration> userWithLoginDurationSerde) {
         KGroupedStream<Long, UserLoginRecord> loginByUserId = loginRecords
-                .map((k,v)-> {
+                .map((k, v) -> {
                     UserLoginRecord loginRecord = generateUserLoginRecord(v);
                     return new KeyValue<>(loginRecord.getUserId(), loginRecord);
                 })
-                .filter((k,v) -> v.getIsLoginConfig() || v.getIsRefreshToken())
+                .filter((k, v) -> v.getIsLoginConfig() || v.getIsRefreshToken())
                 .groupByKey();
 
         loginByUserId
@@ -133,21 +131,21 @@ public class UserLoginDuration {
                         (key, value, aggregate) -> {
                             aggregate.setUsername(value.getUsername());
                             aggregate.setUserId(value.getUserId());
-                            if(value.getIsRefreshToken()){
+                            if (value.getIsRefreshToken()) {
                                 int refreshTokenInterval = Integer.parseInt(envProps.getProperty(Constants.REFRESH_TOKEN_INTERVAL_KEY));
-                                if(aggregate.getConfigLogReadTime() == null){
+                                if (aggregate.getConfigLogReadTime() == null) {
                                     log.warn(key + " : Login time could not be found! Seems that no config log was received.");
                                     aggregate.setConfigLogReadTime(Instant.now());
                                     aggregate.setUsername(value.getUsername());
                                     aggregate.setUserId(value.getUserId());
                                     aggregate.setRefreshTokenCount(1);
                                     aggregate.setDuration(refreshTokenInterval);
-                                }else{
+                                } else {
                                     int refreshTokenCount = aggregate.getRefreshTokenCount() + 1;
                                     aggregate.setRefreshTokenCount(refreshTokenCount);
                                     aggregate.setDuration(refreshTokenCount * refreshTokenInterval);
                                 }
-                            }else{
+                            } else {
                                 aggregate.setUsername(value.getUsername());
                                 aggregate.setUserId(value.getUserId());
                                 aggregate.setConfigLogReadTime(Instant.now());
@@ -159,13 +157,13 @@ public class UserLoginDuration {
                         Materialized.with(Serdes.Long(), userWithLoginDurationSerde)
                 )
                 .toStream()
-                .peek((k, v) ->log.debug(k + " : " + v))
+                .peek((k, v) -> log.debug(k + " : " + v))
                 .filter((k, v) -> v.getDuration() > 0L)
                 .mapValues(v -> convertToJson(v))
                 .to(Constants.DURATION_TOPIC, Produced.with(Serdes.Long(), Serdes.String()));
     }
 
-    private static String convertToJson(UserWithLoginDuration record){
+    private static String convertToJson(UserWithLoginDuration record) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DatumWriter<IndexedRecord> writer = new SpecificDatumWriter<>(record.getClassSchema());
@@ -174,7 +172,7 @@ public class UserLoginDuration {
             encoder.flush();
             baos.flush();
             return baos.toString(StandardCharsets.UTF_8);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Exception occured : ", e);
         }
         return "";
@@ -205,111 +203,36 @@ public class UserLoginDuration {
         String grantType = null;
         String path = null;
 
-        Map source = getSourceFromJson(json);
-        if (source != null) {
-            Map properties = (Map) source.get(Constants.JSON_PROPERTIES_KEY);
+        Map properties = getPropertiesFromJson(json);
 
-            if (properties != null) {
-                userId = ((Number)properties.get(Constants.JSON_USERID_KEY)).longValue();
-                username = (String) properties.get(Constants.JSON_USERNAME_KEY);
-                path = (String) properties.get(Constants.JSON_PATH_KEY);
-                logLevel = (String) properties.get(Constants.JSON_LOG_LEVEL_KEY);
-                grantType = (String) properties.get(Constants.JSON_GRANT_TYPE_KEY);
+        if (properties != null) {
+            userId = ((Number) properties.get(Constants.JSON_USERID_KEY)).longValue();
+            username = (String) properties.get(Constants.JSON_USERNAME_KEY);
+            path = (String) properties.get(Constants.JSON_PATH_KEY);
+            logLevel = (String) properties.get(Constants.JSON_LOG_LEVEL_KEY);
+            grantType = (String) properties.get(Constants.JSON_GRANT_TYPE_KEY);
 
-            }
-/*
-            String msgTemplate = (String) source.get("MessageTemplate");
-
-            if (msgTemplate != null) {
-                isGrantTypeEqualsRefreshToken = msgTemplate.contains("\"grant_type\": [\n" +
-                        "    \"refresh_token\"\n" +
-                        "  ]");
-            }
-
- */
         }
 
         String refreshTokenPath = envProps.getProperty(Constants.REFRESH_TOKEN_PATH_KEY, Constants.REFRESH_TOKEN_PATH);
         String configLogPath = envProps.getProperty(Constants.CONFIG_LOG_PATH_KEY, Constants.CONFIG_LOG_PATH);
 
-        loginRecord.setUserId(userId);
-        loginRecord.setUsername(username);
-
         boolean isRefreshToken = Constants.REFRESH_TOKEN.equals(grantType)
                 && refreshTokenPath.equals(path);
-        loginRecord.setIsRefreshToken(isRefreshToken);
 
         boolean isConfigLog = configLogPath.equals(path)
                 && Constants.LOG_LEVEL.RESPONSE.getName().equals(logLevel);
+
+        loginRecord.setUserId(userId);
+        loginRecord.setUsername(username);
+        loginRecord.setIsRefreshToken(isRefreshToken);
         loginRecord.setIsLoginConfig(isConfigLog);
 
         log.debug("The record read from " + Constants.LOGIN_TOPIC + " contains userId : " + userId + ", Config Log : " + isConfigLog + ", Refresh Token : " + isRefreshToken);
 
         return loginRecord;
     }
-
-    private static String getUserIdFromJson(String json) {
-
-        Map source = getSourceFromJson(json);
-
-        if (source != null) {
-            Map properties = (Map) source.get("Properties");
-
-            if (properties != null) {
-                String userId = (String) properties.get("UserId");
-                return userId;
-            }
-        }
-        return null;
-    }
-
-    private static Instant getTimeFromJson(String json) {
-
-        Map source = getSourceFromJson(json);
-
-        if (source != null) {
-
-            String timestamp = (String) source.get("Timestamp");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT);
-            ZonedDateTime zdt = ZonedDateTime.parse(timestamp, formatter);
-            return zdt.toInstant();
-
-        }
-        return null;
-    }
-
-    private static boolean isRefreshToken(String json) {
-
-        boolean isGrantTypeEqualsRefreshToken = false;
-        boolean isRequestPathEqualsToken = false;
-        boolean isLogLevelEqualsRequest = false;
-
-        Map source = getSourceFromJson(json);
-
-        if (source != null) {
-            String msgTemplate = (String) source.get("MessageTemplate");
-
-            if (msgTemplate != null) {
-                isGrantTypeEqualsRefreshToken = msgTemplate.contains("\"grant_type\": [\n" +
-                        "    \"refresh_token\"\n" +
-                        "  ]");
-            }
-
-            Map properties = (Map) source.get("Properties");
-            if (properties != null) {
-                String requestPath = (String) properties.get("RequestPath");
-                isRequestPathEqualsToken = requestPath.equals("/connect/token");
-
-                String logLevel = (String) properties.get("LogLevel");
-                isLogLevelEqualsRequest = logLevel.equals("Request");
-            }
-        }
-        return isGrantTypeEqualsRefreshToken
-                && isRequestPathEqualsToken
-                && isLogLevelEqualsRequest;
-    }
-
-    private static Map getSourceFromJson(String json) {
+    private static Map getPropertiesFromJson(String json) {
         ObjectMapper mapper = new ObjectMapper();
 
         Map jsonMap = new HashMap<>();
@@ -320,7 +243,7 @@ public class UserLoginDuration {
             e.printStackTrace();
         }
 
-        Map source = (Map) jsonMap.get("_source");
+        Map source = (Map) jsonMap.get(Constants.JSON_PROPERTIES_KEY);
         return source;
     }
 }
