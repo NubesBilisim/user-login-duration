@@ -206,7 +206,9 @@ public class UserLoginDuration {
         Map properties = getPropertiesFromJson(json);
 
         if (properties != null) {
-            userId = ((Number) properties.get(Constants.JSON_USERID_KEY)).longValue();
+            if(null != properties.get(Constants.JSON_USERID_KEY)){
+                userId = ((Number) properties.get(Constants.JSON_USERID_KEY)).longValue();
+            }
             username = (String) properties.get(Constants.JSON_USERNAME_KEY);
             path = (String) properties.get(Constants.JSON_PATH_KEY);
             logLevel = (String) properties.get(Constants.JSON_LOG_LEVEL_KEY);
